@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import express from "express";
+import { pdfTemplate } from "./template/pdf-template";
 
 dotenv.config();
 
@@ -16,6 +17,17 @@ app.post("/", async (req, res) => {
       message: "PDF Generator Service",
       url: "test",
     });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get("/test", async (req, res) => {
+  try {
+    const pdfStream = await pdfTemplate();
+    res.setHeader("Content-Type", "application/pdf");
+    pdfStream.pipe(res);
+    pdfStream.on("end", () => console.log("Done streaming, response sent."));
   } catch (error) {
     res.status(500).send(error);
   }
