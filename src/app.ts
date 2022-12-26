@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import express from "express";
 import { pdfTemplate } from "./template/pdf-template";
+import { uploadStreamToGcs } from "./utils/uploadStreamToGcs";
 
 dotenv.config();
 
@@ -13,9 +14,15 @@ app.get("/health-check", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
+    // Feel free to use this body variable to pass data to your template
+    const body = req.body;
+
+    const pdfStream = await pdfTemplate();
+    const url = await uploadStreamToGcs(pdfStream);
+
     res.status(200).send({
       message: "PDF Generator Service",
-      url: "test",
+      url,
     });
   } catch (error) {
     res.status(500).send(error);
