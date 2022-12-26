@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Quixote = () => (
+export const Quixote = () => (
   <Document>
     <Page style={styles.body}>
       <Text style={styles.header} fixed>
